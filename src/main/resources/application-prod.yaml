@@ -1,0 +1,29 @@
+spring:
+  # PostgreSQL Database configuration
+  datasource:
+    url: ${DB_URL}  # Must be set via environment variable
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME}  # Must be set via environment variable
+    password: ${DB_PASSWORD}  # Must be set via environment variable
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  # JPA configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Never auto-create/update in production
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+# JWT configuration (override with environment variable)
+jwt:
+  secret: ${JWT_SECRET}  # Must be set via environment variable
+
+# Logging configuration
+logging:
+  level:
+    com.smu.oop: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN

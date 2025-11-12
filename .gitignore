@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### etc ###
+POSTMAN_TEST_GUIDE.md
+CLAUDE.md
