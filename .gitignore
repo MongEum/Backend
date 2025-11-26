@@ -38,3 +38,5 @@ out/
 
 ### etc ###
 CLAUDE.md
+API명세서.md
+.env

@@ -15,5 +15,16 @@ spring:
 
 # JWT configuration
 jwt:
-  secret: your-secret-key-here-must-be-at-least-256-bits-long-for-hs256-algorithm-please-change-in-production
+  secret: ${JWT_SECRET:your-jwt-secret-here}
   expiration: 86400000  # 24 hours in milliseconds
+
+# AI Services configuration
+openai:
+  api:
+    key: ${OPENAI_API_KEY:your-openai-api-key-here}
+    url: https://api.openai.com/v1/chat/completions
+    model: gpt-3.5-turbo
+
+youtube:
+  api:
+    key: ${YOUTUBE_API_KEY:your-youtube-api-key-here}
