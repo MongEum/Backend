@@ -14,6 +14,13 @@
 - Username: `sa`
 - Password: (비어있음)
 
+3. **환경 변수 설정**
+```text
+OPENAI_API_KEY=your-openai-api-key
+YOUTUBE_API_KEY=your-youtube-api-key
+JWT_SECRET=your-jwt-secret
+```
+
 ---
 
 ## 1️⃣ 회원가입 (Sign Up)

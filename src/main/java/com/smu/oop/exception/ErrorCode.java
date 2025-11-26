@@ -21,6 +21,10 @@ public enum ErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "A001", "Authentication required"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "A002", "Invalid or expired token"),
 
+    // AI Service errors
+    OPENAI_SERVICE_ERROR(HttpStatus.BAD_GATEWAY, "A003", "OpenAI service error"),
+    YOUTUBE_SERVICE_ERROR(HttpStatus.BAD_GATEWAY, "A004", "YouTube service error"),
+
     // Validation errors
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "V001", "Invalid input"),
 

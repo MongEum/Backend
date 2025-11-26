@@ -12,18 +12,23 @@ import com.smu.oop.exception.ErrorCode;
 import com.smu.oop.repository.DreamRepository;
 import com.smu.oop.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DreamService {
 
     private final DreamRepository dreamRepository;
     private final UserRepository userRepository;
+    private final OpenAIService openAIService;
+    private final YouTubeService youTubeService;
 
     @Transactional
     public DreamResponse createDream(Long userId, DreamRequest request) {
@@ -31,25 +36,42 @@ public class DreamService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND, "ID: " + userId));
 
-        // Generate temporary AI responses (AI integration placeholders)
-        String interpretation = generateTemporaryInterpretation(request.getContent());
-        EmotionCategory emotionCategory = generateTemporaryEmotionCategory();
-        String emotionalAnalysis = generateTemporaryEmotionalAnalysis(emotionCategory);
+        log.info("Creating dream for user: {}, title: {}", userId, request.getTitle());
 
-        // Create dream
+        // Call OpenAI for dream interpretation and emotion category
+        Map<String, String> interpretationResult = openAIService.interpretDream(request.getContent());
+        String interpretation = interpretationResult.get("interpretation");
+        EmotionCategory emotionCategory = EmotionCategory.valueOf(interpretationResult.get("emotionCategory"));
+
+        log.info("AI interpretation completed. Emotion: {}", emotionCategory);
+
+        // Call OpenAI for music recommendation
+        Map<String, String> musicResult = openAIService.recommendMusic(request.getContent());
+        String musicTitle = musicResult.get("title");
+        String musicArtist = musicResult.get("artist");
+        String musicReason = musicResult.get("reason");
+
+        log.info("Music recommendation: {} - {}", musicArtist, musicTitle);
+
+        // Search YouTube for the recommended song
+        String youtubeVideoId = youTubeService.searchYouTubeVideoId(musicTitle, musicArtist);
+
+        log.info("YouTube video found: {}", youtubeVideoId);
+
+        // Create dream with AI-generated data
         Dream dream = Dream.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .interpretation(interpretation)
                 .emotionCategory(emotionCategory)
-                .emotionalAnalysis(emotionalAnalysis)
-                .recommendedSongName("Moonlight Sonata")
-                .recommendedArtist("Ludwig van Beethoven")
-                .recommendedSongUrl("https://www.youtube.com/watch?v=4Tr0otuiQuU")
+                .recommendedSongName(musicTitle)
+                .recommendedArtist(musicArtist)
+                .youtubeVideoId(youtubeVideoId)
                 .user(user)
                 .build();
 
         Dream savedDream = dreamRepository.save(dream);
+        log.info("Dream created successfully with ID: {}", savedDream.getId());
 
         return DreamResponse.from(savedDream);
     }
@@ -100,31 +122,5 @@ public class DreamService {
         }
 
         dreamRepository.delete(dream);
-    }
-
-    /**
-     * Temporary interpretation generator (placeholder for AI integration)
-     */
-    private String generateTemporaryInterpretation(String dreamContent) {
-        return "해몽 결과: 이 꿈은 AI 해몽 서버와 연동되면 자동으로 분석됩니다. " +
-                "현재는 임시 해몽 메시지가 표시됩니다. " +
-                "꿈의 내용을 바탕으로 AI가 상징적 의미와 심리적 해석을 제공할 예정입니다.";
-    }
-
-    /**
-     * Temporary emotion category generator (placeholder for AI integration)
-     */
-    private EmotionCategory generateTemporaryEmotionCategory() {
-        return EmotionCategory.PEACEFUL;
-    }
-
-    /**
-     * Temporary emotional analysis generator (placeholder for AI integration)
-     */
-    private String generateTemporaryEmotionalAnalysis(EmotionCategory category) {
-        return String.format("감정 분석 결과: 이 꿈은 '%s'한 감정을 나타냅니다. " +
-                "AI 서버와 연동되면 더 상세한 감정 분석이 제공됩니다. " +
-                "꿈의 내용과 맥락을 바탕으로 감정의 원인과 의미를 분석할 예정입니다.",
-                category.getKoreanName());
     }
 }

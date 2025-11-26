@@ -25,13 +25,11 @@ public class DreamDetailResponse {
 
     private EmotionCategory emotionCategory;
 
-    private String emotionalAnalysis;
-
     private String recommendedSongName;
 
     private String recommendedArtist;
 
-    private String recommendedSongUrl;
+    private String youtubeVideoId;
 
     private LocalDateTime createdAt;
 
@@ -46,10 +44,9 @@ public class DreamDetailResponse {
                 .content(dream.getContent())
                 .interpretation(dream.getInterpretation())
                 .emotionCategory(dream.getEmotionCategory())
-                .emotionalAnalysis(dream.getEmotionalAnalysis())
                 .recommendedSongName(dream.getRecommendedSongName())
                 .recommendedArtist(dream.getRecommendedArtist())
-                .recommendedSongUrl(dream.getRecommendedSongUrl())
+                .youtubeVideoId(dream.getYoutubeVideoId())
                 .createdAt(dream.getCreatedAt())
                 .updatedAt(dream.getUpdatedAt())
                 .user(UserResponse.from(dream.getUser()))

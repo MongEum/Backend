@@ -21,6 +21,9 @@
 - [배포](#-배포)
 - [트러블슈팅](#-트러블슈팅)
 - [로드맵](#-로드맵)
+- [기여하기](#-기여하기)
+- [라이센스](#-라이센스)
+- [팀](#-팀)
 
 ## 🌟 프로젝트 소개
 
@@ -51,11 +54,11 @@
 - ✅ 꿈 삭제
 - ✅ 본인 꿈만 접근 가능한 권한 제어
 
-#### 3. AI 분석 (현재 Mock 데이터)
-- ✅ 자동 해몽 (interpretation)
-- ✅ 감정 카테고리 분류 (HAPPY, SAD, ANXIOUS, PEACEFUL, EXCITED, NOSTALGIC, FEARFUL)
+#### 3. AI 분석 (OpenAI GPT-3.5-turbo 통합 완료)
+- ✅ 자동 해몽 (interpretation) - 동양적, 서양적, 심리적 관점을 통합한 종합 해석
+- ✅ 감정 카테고리 자동 분류 (HAPPY, SAD, ANXIOUS, PEACEFUL, EXCITED, NOSTALGIC, FEARFUL)
 - ✅ 감정 분석 설명 (emotionalAnalysis)
-- ✅ 음악 추천 (곡명, 아티스트, URL)
+- ✅ 음악 추천 (곡명, 아티스트, URL, YouTube videoId)
 
 ### 감정 카테고리
 
@@ -86,6 +89,11 @@
 - **Lombok**: 보일러플레이트 코드 감소
 - **Validation**: Jakarta Validation API
 - **DevTools**: Spring Boot DevTools (hot reload)
+- **WebClient**: Spring WebFlux for non-blocking API calls
+
+### AI Services
+- **OpenAI API**: GPT-3.5-turbo for dream interpretation and music recommendation
+- **YouTube Data API v3**: Music video search and embedding
 
 ## 🏗 시스템 아키텍처
 
@@ -177,6 +185,14 @@
 
 ### Configuration
 
+**환경변수**
+
+```text
+OPENAI_API_KEY=your-openai-api-key
+YOUTUBE_API_KEY=your-youtube-api-key
+JWT_SECRET=your-jwt-secret
+```
+
 `src/main/resources/application.yaml` 파일에서 기본 설정을 확인할 수 있습니다:
 
 ```yaml
@@ -185,14 +201,31 @@ spring:
     active: local  # local, dev, prod
 
 jwt:
-  secret: your-secret-key-here  # ⚠️ 운영 환경에서는 반드시 변경
+  secret: ${JWT_SECRET:your-jwt-secret-here}  # ⚠️ 운영 환경에서는 반드시 변경
   expiration: 86400000  # 24시간
+
+# AI Services (환경 변수 사용 권장)
+openai:
+  api:
+    key: ${OPENAI_API_KEY:your-openai-api-key-here}
+    url: https://api.openai.com/v1/chat/completions
+    model: gpt-3.5-turbo
+
+youtube:
+  api:
+    key: ${YOUTUBE_API_KEY:your-youtube-api-key-here}
 ```
 
 **환경별 설정 파일:**
 - `application-local.yaml` - 로컬 개발 (H2 in-memory)
 - `application-dev.yaml` - 개발 서버
 - `application-prod.yaml` - 운영 서버 (PostgreSQL)
+
+**환경 변수 설정 (필수):**
+```bash
+export OPENAI_API_KEY="your-openai-api-key"
+export YOUTUBE_API_KEY="your-youtube-api-key"
+```
 
 ### Running
 
@@ -507,26 +540,45 @@ export DB_PASSWORD=your-db-password
 ./gradlew wrapper --gradle-version 8.5
 ```
 
-## 🗺 로드맵
+[//]: # (## 🗺 로드맵)
 
-### v1.0
-- [x] 사용자 인증 (회원가입, 로그인)
-- [x] JWT 기반 인증
-- [x] 꿈 CRUD 기능
-- [x] 감정 분석 (Mock)
-- [x] 음악 추천 (Mock)
+[//]: # ()
+[//]: # (### v1.0 ✅ &#40;완료&#41;)
 
-### v1.1
-- [ ] AI 서버 연동
-  - [ ] 실시간 꿈 해몽
-  - [ ] 감정 분석 자동화
-  - [ ] 음악 추천 고도화
-- [ ] 검색 기능
-  - [ ] 키워드 기반 꿈 검색
-  - [ ] 감정 카테고리별 필터링
-- [ ] 통계 기능
-  - [ ] 월별 꿈 통계
-  - [ ] 감정 분포 차트
+[//]: # (- [x] 사용자 인증 &#40;회원가입, 로그인&#41;)
+
+[//]: # (- [x] JWT 기반 인증)
+
+[//]: # (- [x] 꿈 CRUD 기능)
+
+[//]: # (- [x] OpenAI 통합 - 실시간 꿈 해몽)
+
+[//]: # (- [x] 감정 분석 자동화)
+
+[//]: # (- [x] 음악 추천 고도화)
+
+[//]: # (- [x] YouTube 비디오 검색 통합)
+
+[//]: # ()
+[//]: # (### v1.1 &#40;진행 중&#41;)
+
+[//]: # (- [ ] 검색 기능)
+
+[//]: # (  - [ ] 키워드 기반 꿈 검색)
+
+[//]: # (  - [ ] 감정 카테고리별 필터링)
+
+[//]: # (- [ ] 통계 기능)
+
+[//]: # (  - [ ] 월별 꿈 통계)
+
+[//]: # (  - [ ] 감정 분포 차트)
+
+[//]: # (- [ ] 성능 최적화)
+
+[//]: # (  - [ ] AI 호출 비동기 처리)
+
+[//]: # (  - [ ] 응답 캐싱)
 
 [//]: # (### v2.0 &#40;계획&#41;)
 
