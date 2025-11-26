@@ -12,25 +12,26 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Dream extends BaseEntity {
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column(columnDefinition = "TEXT")
     private String interpretation;
 
     @Enumerated(EnumType.STRING)
     private EmotionCategory emotionCategory;
 
-    @Column(columnDefinition = "TEXT")
-    private String emotionalAnalysis;
-
+    @Column(length = 200)
     private String recommendedSongName;
 
+    @Column(length = 100)
     private String recommendedArtist;
 
-    private String recommendedSongUrl;
+    @Column(length = 50)
+    private String youtubeVideoId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
